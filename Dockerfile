@@ -1,31 +1,33 @@
-FROM ubuntu:12.04
- 
-#RUN apt-get update
- 
-## MYSQL
-#RUN apt-get install -y -q mysql-client libmysqlclient-dev
- 
-## RUBY
-#RUN apt-get install -y -q ruby1.9.1 ruby1.9.1-dev rubygems1.9.1 irb1.9.1 build-essential libopenssl-ruby1.9.1 libssl-dev zlib1g-dev
- 
-## RAILS
-#RUN gem install rails --no-ri --no-rdoc
- 
-## For execjs - needs node
-#RUN apt-get install -y python-software-properties python python-setuptools ruby rubygems
-#RUN add-apt-repository ppa:chris-lea/node.js
-RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list
-#RUN apt-get update
-#RUN apt-get install -y nodejs
- 
-## RAILS APP
-#ADD qruby/dockerrails /poc/docker-rails
-#ADD ./Desktop/invokevoke/pocket-it-vendor-server /pocket/docker-pocket
-RUN cd /home/user/Desktop/blog;bundle install
+# -*- sh -*-
+FROM dimmyqburst/dockerrails
+
+# development tools
+#RUN apt-get -qy install git vim tmux
+
+# ruby 1.9.3 and build dependencies
+RUN apt-get -qy install ruby1.9.1 ruby1.9.1-dev build-essential libpq-dev libv8-dev libsqlite3-dev
+
+# bundler
+RUN gem install bundler
+
+# create a "rails" user
+# the Rails application will live in the /rails directory
+RUN adduser --disabled-password --home=/rails --gecos "" rails
+
+# copy the Rails app
+# we assume we have cloned the "docrails" repository locally
+#  and it is clean; see the "prepare" script
+ADD docrails/guides/code/getting_started /rails
+#ADD blog /rails
+
+# copy and execute the setup script
+# this will run bundler, setup the database, etc.
+ADD scripts/setup /setup
+RUN su rails -c /setup
+
+# copy the start script
+ADD scripts/start /start
+
 EXPOSE 3000
- 
-#RUN easy_install supervisor
-#RUN echo_supervisord_conf > /etc/supervisord.conf
-#RUN printf "[include]\nfiles = /srv/docker-rails/Supervisorfile\n" >> /etc/supervisord.conf
- 
-#CMD ["/usr/local/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+USER rails
+CMD /start
