@@ -19,9 +19,9 @@ RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt
 #RUN apt-get install -y nodejs
  
 ## RAILS APP
-#ADD ./docker-rails /srv/docker-rails
+ADD ./dockerrails /poc/docker-rails
 #ADD ./Desktop/invokevoke/pocket-it-vendor-server /pocket/docker-pocket
-RUN bundle install
+RUN cd /poc/docker-rails;bundle install
 EXPOSE 3000
  
 #RUN easy_install supervisor
