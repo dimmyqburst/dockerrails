@@ -1,5 +1,5 @@
 # -*- sh -*-
-FROM dimmyqburst/dockerrails
+FROM qruby/dockerrails
 
 # development tools
 #RUN apt-get -qy install git vim tmux
