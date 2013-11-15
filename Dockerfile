@@ -19,9 +19,9 @@ RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt
 #RUN apt-get install -y nodejs
  
 ## RAILS APP
-ADD qruby/dockerrails /poc/docker-rails
+#ADD qruby/dockerrails /poc/docker-rails
 #ADD ./Desktop/invokevoke/pocket-it-vendor-server /pocket/docker-pocket
-RUN cd /poc/docker-rails;bundle install
+RUN cd /home/user/Desktop/blog;bundle install
 EXPOSE 3000
  
 #RUN easy_install supervisor
